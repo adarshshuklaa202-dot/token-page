@@ -1,30 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Your Access Token</title>
-</head>
-<body style="background:black;color:white;text-align:center;padding-top:100px;font-family:sans-serif;">
+<title>Get Token</title>
+<script type="module">
 
-<h2>🔐 Your Access Token</h2>
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-database.js";
 
-<h1 id="token" style="color:lime;"></h1>
+const firebaseConfig = {
+apiKey: "PASTE_YOUR_API_KEY",
+authDomain: "radha-jaap-mala.firebaseapp.com",
+databaseURL: "https://radha-jaap-mala-default-rtdb.firebaseio.com",
+projectId: "radha-jaap-mala",
+storageBucket: "radha-jaap-mala.appspot.com",
+messagingSenderId: "582552451696",
+appId: "1:582552451696:web:8f83abf48da0622738d2b5"
+};
 
-<p>Copy this code and paste in app</p>
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-<script>
-function generateToken() {
-    const now = new Date();
-    const days = Math.floor(now.getTime() / (1000 * 60 * 60 * 24));
-    const period = Math.floor(days / 3);
-    const base = "STUDYPRO";
-    let token = "";
-    for(let i = 0; i < base.length; i++){
-        token += String.fromCharCode(base.charCodeAt(i) + (period % 5));
-    }
-    return token;
+function generateRandomToken(){
+return "TKN" + Math.random().toString(36).substring(2,10).toUpperCase();
 }
-document.getElementById("token").innerText = generateToken();
-</script>
 
+const token = generateRandomToken();
+
+set(ref(db, "tokens/" + token), {
+created: Date.now()
+});
+
+document.body.innerHTML = `
+<h2>Your Token</h2>
+<h1>${token}</h1>
+<button onclick="navigator.clipboard.writeText('${token}')">Copy</button>
+`;
+
+</script>
+</head>
+<body>
+Loading...
 </body>
 </html>
